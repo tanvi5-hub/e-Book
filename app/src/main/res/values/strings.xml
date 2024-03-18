@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">eBook</string>
+    <string name="sign_in_activity">Sign In Activity</string>
+    <string name="submit">Submit</string>
+</resources>
