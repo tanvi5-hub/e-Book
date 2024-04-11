@@ -3,6 +3,10 @@ package com.example.ebook
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import com.example.ebook.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -22,9 +26,29 @@ class SignUpActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance()
 
+        var userTypeName = ""
+        val roleSpinner = findViewById<Spinner>(R.id.roleDropdownSignUp)
+        val roles = arrayOf("Author", "Reader")
+        val arrayAdapter = ArrayAdapter(this@SignUpActivity, android.R.layout.simple_spinner_dropdown_item, roles)
+        roleSpinner.adapter = arrayAdapter
+
         binding.textView.setOnClickListener {
             val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
+        }
+
+        roleSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                userTypeName = roles[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
         }
 
         binding.button.setOnClickListener {
@@ -46,6 +70,7 @@ class SignUpActivity : AppCompatActivity() {
                             userData["name"] = name
                             userData["contact"] = contact
                             userData["password"] = password
+                            userData["user_type"] = userTypeName
                             userRef.setValue(userData).addOnCompleteListener { dbTask ->
                                 if(dbTask.isSuccessful) {
                                     Toast.makeText(this, "Registration Successful.", Toast.LENGTH_LONG).show()
