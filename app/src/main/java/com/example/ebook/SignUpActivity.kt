@@ -27,7 +27,7 @@ class SignUpActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance()
 
         var userTypeName = ""
-        val roleSpinner = findViewById<Spinner>(R.id.roleDropdownSignUp)
+        val roleSpinner = findViewById<Spinner>(R.id.storyCategoryDropdown)
         val roles = arrayOf("Author", "Reader")
         val arrayAdapter = ArrayAdapter(this@SignUpActivity, android.R.layout.simple_spinner_dropdown_item, roles)
         roleSpinner.adapter = arrayAdapter

@@ -3,9 +3,13 @@ package com.example.ebook
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -17,10 +21,10 @@ class CreateStoryActivity : AppCompatActivity(), TextWatcher {
     private var currentPageNumber = 1
     private lateinit var editTextStoryName: EditText
     private lateinit var editTextStoryDescription: EditText
-    private lateinit var editTextStoryCategory: EditText
     private lateinit var buttonAddPage: Button
     private lateinit var buttonSaveStory: Button
     private lateinit var database: FirebaseDatabase
+    private lateinit var storyCategoryName: String
 
     private val pages: MutableList<Page> = mutableListOf()
 
@@ -30,10 +34,28 @@ class CreateStoryActivity : AppCompatActivity(), TextWatcher {
 
         editTextStoryName = findViewById(R.id.editTextStoryName)
         editTextStoryDescription = findViewById(R.id.editTextStoryDescription)
-        editTextStoryCategory = findViewById(R.id.editTextStoryCategory)
+        storyCategoryName = ""
+        val storyCategorySpinner = findViewById<Spinner>(R.id.storyCategoryDropdown)
+        val storyCategories = arrayOf("Fiction", "Action", "Romantic", "Horror")
+        val arrayAdapter = ArrayAdapter(this@CreateStoryActivity, android.R.layout.simple_spinner_dropdown_item, storyCategories)
+        storyCategorySpinner.adapter = arrayAdapter
         buttonAddPage = findViewById(R.id.buttonAddPage)
         buttonSaveStory = findViewById(R.id.buttonSaveStory)
         database = FirebaseDatabase.getInstance()
+
+        storyCategorySpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                storyCategoryName = storyCategories[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
 
         buttonAddPage.setOnClickListener {
             addPage()
@@ -105,7 +127,7 @@ class CreateStoryActivity : AppCompatActivity(), TextWatcher {
     private fun saveStory() {
         val storyName = editTextStoryName.text.toString()
         val storyDescription = editTextStoryDescription.text.toString()
-        val storyCategory = editTextStoryCategory.text.toString()
+        val storyCategory = storyCategoryName
 
         val currentUser = FirebaseAuth.getInstance().currentUser
         val authorId = currentUser?.uid

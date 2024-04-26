@@ -10,6 +10,8 @@
         android:id="@+id/editTextStoryName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
         android:hint="Story Name"
         android:inputType="text" />
 
@@ -22,20 +24,18 @@
         android:hint="Story Description"
         android:inputType="textMultiLine" />
 
-    <EditText
-        android:id="@+id/editTextStoryCategory"
+    <Spinner
+        android:id="@+id/storyCategoryDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextStoryDescription"
-        android:layout_marginTop="16dp"
-        android:hint="Story Category"
-        android:inputType="text" />
+        android:layout_marginTop="105dp" />
 
     <LinearLayout
         android:id="@+id/layoutPages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextStoryCategory"
+        android:layout_below="@id/storyCategoryDropdown"
         android:orientation="vertical"
         android:layout_marginTop="16dp"/>
 
@@ -43,8 +43,8 @@
         android:id="@+id/buttonAddPage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layoutPages"
-        android:layout_marginTop="16dp"
+        android:layout_below="@+id/storyCategoryDropdown"
+        android:layout_marginTop="51dp"
         android:text="Add Page" />
 
     <Button
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/buttonAddPage"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:text="Save Story" />
 
 </RelativeLayout>
