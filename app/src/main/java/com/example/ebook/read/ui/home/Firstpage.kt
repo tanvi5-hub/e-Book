@@ -34,6 +34,8 @@ import com.example.ebook.read.ui.personal.ImageButton
 
 @Composable
 
+
+
 fun SearchResult(onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,

@@ -1,6 +1,8 @@
 package com.example.ebook.read.model
 import androidx.compose.runtime.Immutable
 
+
+
 @Immutable
 data class Bookstore(
     val id: Long,
@@ -10,6 +12,7 @@ data class Bookstore(
     val tagline: String = "",
     val tags: Set<String> = emptySet()
 )
+
 
 val bookstore = listOf(
     Bookstore(

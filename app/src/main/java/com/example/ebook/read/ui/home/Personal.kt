@@ -17,7 +17,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 @Preview
 @Composable
-
 fun MainScreen() {
     Scaffold(
         topBar = {

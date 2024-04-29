@@ -66,7 +66,6 @@ fun SearchPage() {
 @Composable
 fun RoundedSearchInputBox() {
     val searchText = remember { mutableStateOf("") }
-
     OutlinedTextField(
         value = searchText.value,
         onValueChange = { searchText.value = it },

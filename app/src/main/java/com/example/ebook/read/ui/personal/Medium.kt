@@ -42,8 +42,6 @@ import com.example.ebook.R
 
 
 @Composable
-
-
 fun MediumBottomApp(onClick: () -> Unit) {
     var editableText by remember { mutableStateOf(TextFieldValue()) }
     var isEditing by remember { mutableStateOf(false) }

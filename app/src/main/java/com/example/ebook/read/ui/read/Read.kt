@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 
 
 import androidx.compose.foundation.layout.*
-
 import com.example.ebook.read.ui.home.SearchResult
 
 @Preview

@@ -14,7 +14,6 @@ val Shadow3 = Color(0xff9b86fa)
 val Shadow2 = Color(0xffc8bbfd)
 val Shadow1 = Color(0xffded6fe)
 val Shadow0 = Color(0xfff4f2ff)
-
 val Ocean11 = Color(0xff005687)
 val Ocean10 = Color(0xff006d9e)
 val Ocean9 = Color(0xff0087b3)

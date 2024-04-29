@@ -19,7 +19,6 @@ fun TxtFileContent(txtFilePath: String) {
         val file = File(txtFilePath)
         file.readText()
     }
-
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = fileContent,
