@@ -57,7 +57,7 @@ fun SearchResult(onClick: () -> Unit) {
                 "dog",
                 fontSize = 32.sp // 明确指定字体大小
             )
-            Text("更新到第1234章" ,
+            Text("Read up to Chapter 1234" ,
                 fontSize = 16.sp
             )
         }
