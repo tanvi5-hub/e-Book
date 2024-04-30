@@ -15,27 +15,41 @@ import androidx.compose.foundation.layout.*
 import com.example.ebook.read.ui.search.SearchButton
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-@Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.ebook.read.ui.navigation.AppNavigation
+import com.example.ebook.read.ui.personal.PersonScreen
+import com.example.ebook.read.ui.theme.ReaderTheme
+
+
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            SearchButton()
+            SearchButton(navController) // 确保你有一个SearchButton组件的定义
         },
         bottomBar = {
-            HomeBottomAppBarExample() // 这里调用您的底部导航栏
+            HomeBottomAppBarExample(navController) // 使用外部传入的navController
         }
-
-
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
-            SearchResult(onClick = {})
-            // 在这里调用SearchResult函数
-            Spacer(Modifier.height(0.dp)) // 添加一些垂直间距
-
+            SearchResult(onClick = {
+                // 定义点击搜索结果后的行为，例如导航到详细页面
+                // 例如：navController.navigate("detail_screen")
+            })
+            // SearchResult组件需要定义一个onClick参数的行为
+            Spacer(Modifier.height(8.dp)) // 根据需要调整间距
         }
     }
 }
 
 
-
+@Preview
+@Composable
+fun MainPreview() {
+    ReaderTheme {
+        // 确保传递一个有效的NavHostController实例
+        val navController = rememberNavController()
+        MainScreen(navController)
+    }
+}

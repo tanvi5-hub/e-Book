@@ -54,25 +54,33 @@ fun NovelDirectoryContent() {
         }
     }
 
-    val maxWidth = calculateMaxWidth(positions)
-    val maxHeight = calculateMaxHeight(positions)
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val constraintsMaxHeight = maxHeight
 
-    Column(modifier = Modifier.padding(0.dp)
-        ) {
-        levels.forEachIndexed { index, level ->
-            StoryLevel(level, positions[index])
+        Column(modifier = Modifier.padding(16.dp)) {
+            levels.forEachIndexed { index, level ->
+                StoryLevel(level, positions[index])
+                if (index < levels.size - 1) {
+                    Spacer(modifier = Modifier.height(50.dp)) // Add space between levels for drawing connections
+                }
+            }
         }
+
+        val maxWidth = calculateMaxWidth(positions)
+        val maxHeight = constraintsMaxHeight.value + 50.dp.value * (levels.size - 1) // Include spacers
+
         DrawConnections(levels, positions, maxWidth, maxHeight)
     }
 }
 
 @Composable
 fun DrawConnections(levels: List<List<String>>, positions: List<MutableList<Offset>>, maxWidth: Float, maxHeight: Float) {
-    val density = LocalDensity.current
     Canvas(
         modifier = Modifier
-            .size(width = with(density) { maxWidth.toDp() }, height = with(density) { maxHeight.toDp() })
-    ){
+            .fillMaxSize()
+            .height(maxHeight.dp)
+            .width(maxWidth.dp)
+    ) {
         for (i in 0 until levels.size - 1) {
             val currentLevel = levels[i]
             val nextLevel = levels[i + 1]
@@ -82,7 +90,7 @@ fun DrawConnections(levels: List<List<String>>, positions: List<MutableList<Offs
                 nextLevel.forEachIndexed { nextIndex, nextNode ->
                     if (node == nextNode || nextNode.startsWith(node)) {
                         drawLine(
-                            color = Color.Gray,
+                            color = Color.Black,
                             start = currentPositions[index],
                             end = nextPositions[nextIndex],
                             strokeWidth = 2f
@@ -93,7 +101,6 @@ fun DrawConnections(levels: List<List<String>>, positions: List<MutableList<Offs
         }
     }
 }
-
 
 @Composable
 fun StoryLevel(level: List<String>, positionsState: MutableList<Offset>) {
@@ -135,6 +142,7 @@ fun StoryLevel(level: List<String>, positionsState: MutableList<Offset>) {
         }
     }
 }
+
 fun calculateMaxWidth(positions: List<MutableList<Offset>>): Float {
     return positions.flatten().maxOfOrNull { it.x } ?: 0f
 }

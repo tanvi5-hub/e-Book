@@ -44,10 +44,12 @@ import androidx.compose.runtime.mutableStateOf
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-@Preview
+import androidx.navigation.NavHostController
+
+
 
 @Composable
-fun SearchPage() {
+fun SearchPage(navController: NavHostController) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()

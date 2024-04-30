@@ -124,11 +124,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.ebook.read.ui.theme.ReaderTheme
-@Preview
+
 @Composable
 fun SearchButton(
-
+    navController: NavHostController
 
 ) {
 
@@ -141,7 +142,7 @@ fun SearchButton(
             // 为每个Button指定weight(1f)，以确保它们平均分配空间
             OutlinedButton(
                 modifier = Modifier.weight(1f), // 平均分配空间
-                onClick = { /* do something */ }) {
+                onClick = { navController.navigate("search") }) {
                 Icon(
                     Icons.Filled.Search,
                     contentDescription = "Localized description",

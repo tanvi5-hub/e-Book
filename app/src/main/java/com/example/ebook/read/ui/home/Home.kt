@@ -129,63 +129,64 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.ebook.read.ui.theme.ReaderTheme
 
 
 
-@Preview
+
 @Composable
-fun HomeBottomAppBarExample(
-
-) {
-
-
-            BottomAppBar {
-
-                // 使用Row来水平排列按钮，并且平均分配空间
-                Row(
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(), // 让Row填充整个BottomAppBar的宽度
-                    horizontalArrangement = Arrangement.SpaceBetween // 在按钮之间平均分配空间
-
-                ) {
-                    // 为每个Button指定weight(1f)，以确保它们平均分配空间
-                    TextButton(
-                        modifier = Modifier.weight(1f).fillMaxHeight()
-                            , // 平均分配空间
-                        onClick = { /* do something */ }
-
-
-                    ) {
-                        Icon(
-                            Icons.Filled.Book,
-                            contentDescription = "Localized description",
-                            tint = Color.Black
-                        )
-                        Text(text = "Book", color = Color.Black)
-                    }
-                    TextButton(
-                        modifier = Modifier.weight(1f).fillMaxHeight(), // 平均分配空间
-                        onClick = { /* do something */ }
-                    ) {
-                        Icon(
-                            Icons.Filled.FindInPage,
-                            contentDescription = "Localized description",
-                            tint = Color.Black
-                        )
-                        Text(text = "Find", color = Color.Black)
-                    }
-                    TextButton(
-                        modifier = Modifier.weight(1f).fillMaxHeight(), // 平均分配空间
-                        onClick = { /* do something */ }) {
-                        Icon(
-                            Icons.Filled.Home,
-                            contentDescription = "Localized description",
-                            tint = Color.Black
-                        )
-                        Text(text = "Home", color = Color.Black)
-                    }
-                }
+fun HomeBottomAppBarExample(navController: NavHostController) {
+    BottomAppBar {
+        // 使用Row来水平排列按钮，并且平均分配空间
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(), // 让Row填充整个BottomAppBar的宽度
+            horizontalArrangement = Arrangement.SpaceBetween // 在按钮之间平均分配空间
+        ) {
+            // 为每个Button指定weight(1f)，以确保它们平均分配空间
+            TextButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(), // 平均分配空间
+                onClick = { navController.navigate("book") } // 导航到书籍页面
+            ) {
+                Icon(
+                    Icons.Filled.Book,
+                    contentDescription = "Localized description",
+                    tint = Color.Black
+                )
+                Text(text = "Book", color = Color.Black)
+            }
+            TextButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(), // 平均分配空间
+                onClick = { navController.navigate("find") } // 导航到查找页面
+            ) {
+                Icon(
+                    Icons.Filled.FindInPage,
+                    contentDescription = "Localized description",
+                    tint = Color.Black
+                )
+                Text(text = "Liberary", color = Color.Black)
+            }
+            TextButton(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(), // 平均分配空间
+                onClick = { navController.navigate("home") } // 导航到主页
+            ) {
+                Icon(
+                    Icons.Filled.Home,
+                    contentDescription = "Localized description",
+                    tint = Color.Black
+                )
+                Text(text = "Home", color = Color.Black)
             }
         }
+    }
+}
 
 
