@@ -50,6 +50,7 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
@@ -130,13 +131,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.example.ebook.read.ui.liberary.LibraryScreen
+import com.example.ebook.read.ui.personal.PersonScreen
+import com.example.ebook.read.ui.search.SearchPage
 import com.example.ebook.read.ui.theme.ReaderTheme
+import com.google.accompanist.navigation.animation.composable
 
 
+
+@OptIn(ExperimentalAnimationApi::class)
 
 
 @Composable
-fun HomeBottomAppBarExample(navController: NavHostController) {
+fun HomeBottomAppBarExample(navController: NavHostController,
+
+) {
     BottomAppBar {
         // 使用Row来水平排列按钮，并且平均分配空间
         Row(
@@ -150,7 +161,7 @@ fun HomeBottomAppBarExample(navController: NavHostController) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(), // 平均分配空间
-                onClick = { navController.navigate("book") } // 导航到书籍页面
+                onClick = { navController.navigate("home") } // 导航到书籍页面
             ) {
                 Icon(
                     Icons.Filled.Book,
@@ -163,20 +174,20 @@ fun HomeBottomAppBarExample(navController: NavHostController) {
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(), // 平均分配空间
-                onClick = { navController.navigate("find") } // 导航到查找页面
+                onClick = { navController.navigate("library") } // 导航到查找页面
             ) {
                 Icon(
                     Icons.Filled.FindInPage,
                     contentDescription = "Localized description",
                     tint = Color.Black
                 )
-                Text(text = "Liberary", color = Color.Black)
+                Text(text = "Library", color = Color.Black)
             }
             TextButton(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(), // 平均分配空间
-                onClick = { navController.navigate("home") } // 导航到主页
+                onClick = { navController.navigate("personal") } // 导航到主页
             ) {
                 Icon(
                     Icons.Filled.Home,
@@ -188,5 +199,3 @@ fun HomeBottomAppBarExample(navController: NavHostController) {
         }
     }
 }
-
-

@@ -132,6 +132,7 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class")
     // Optional - Integration with activities
     implementation("androidx.activity:activity-compose:1.8.2")
+
     // Optional - Integration with ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     // Optional - Integration with LiveData
@@ -179,16 +180,25 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version")
     implementation("androidx.compose.material:material:1.6.3")
 
+    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-flowlayout
+    implementation("com.google.accompanist:accompanist-flowlayout:0.35.0-alpha")
+
     // optional - Test helpers for LiveData
     testImplementation("androidx.arch.core:core-testing:$arch_version")
-
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.35.x")
     // optional - Test helpers for Lifecycle runtime
     testImplementation ("androidx.lifecycle:lifecycle-runtime-testing:$lifecycle_version")
-    val accompanist_version = "0.24.3-alpha"
+    val accompanist_version = "0.31.0-alpha"
     implementation ("com.google.accompanist:accompanist-systemuicontroller:$accompanist_version")
     implementation ("com.google.accompanist:accompanist-insets:$accompanist_version")
     implementation ("com.google.accompanist:accompanist-pager:$accompanist_version")
     implementation ("com.google.accompanist:accompanist-navigation-animation:$accompanist_version")
     implementation ("com.google.accompanist:accompanist-placeholder-material:$accompanist_version")
     implementation ("com.google.accompanist:accompanist-swiperefresh:$accompanist_version")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+
+
+
+
+
 }

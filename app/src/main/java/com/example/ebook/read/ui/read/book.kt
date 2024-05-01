@@ -1,33 +1,81 @@
 package com.example.ebook.read.ui.read
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import java.io.File
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+
+import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.geometry.Offset
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.input.pointer.consumeDownChange
+import androidx.compose.ui.input.pointer.isPrimaryPressed
+import androidx.compose.ui.input.pointer.positionChange
 
 @Composable
 fun TxtFileContent(txtFilePath: String) {
     val fileContent = remember(txtFilePath) {
-        val file = File(txtFilePath)
-        file.readText()
+        File(txtFilePath).readText()
     }
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = fileContent,
-            modifier = Modifier.fillMaxWidth(),
-            maxLines = Int.MAX_VALUE,
-            overflow = TextOverflow.Ellipsis
+
+    val pageSize = 4000  // Adjust this to fit the content appropriately
+    val pages = remember(fileContent) {
+        fileContent.chunked(pageSize)
+    }
+
+    var currentPage by remember { mutableStateOf(0) }
+
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .background(Color.White)
+            .fillMaxWidth()
+            .pointerInput(Unit) {
+                detectTapGestures { offset ->
+                    val thirdWidth = size.width / 3
+                    when {
+                        offset.x < thirdWidth -> {
+                            if (currentPage > 0) currentPage--
+                        }
+                        offset.x > 2 * thirdWidth -> {
+                            if (currentPage < pages.size - 1) currentPage++
+                        }
+                    }
+                }
+            }
+    ) {
+        BasicText(
+            text = pages.getOrElse(currentPage) { "No content" },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
+
+
+
 
 @Preview
 @Composable
