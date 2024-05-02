@@ -29,20 +29,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
 import com.example.ebook.read.ui.personal.ImageButton
-
+import com.example.ebook.read.model.SearchViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 // [START android_compose_layout_basics_1]
 
 @Composable
 
 
 
-fun SearchResult(onClick: () -> Unit) {
+fun SearchResult(onClick: () -> Unit,viewModel: SearchViewModel = viewModel()) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth() // 使Row充满屏幕宽度
             .padding(0.dp) // 添加一些内边距
-            .border(0.1.dp, Color.Black)
+            .border(0.3.dp, Color.Black)
             .clickable(onClick = onClick )
     ) {
         Image(
@@ -54,10 +55,11 @@ fun SearchResult(onClick: () -> Unit) {
 
         Column {
             Text(
-                "dog",
+                viewModel.imageName,
                 fontSize = 32.sp // 明确指定字体大小
             )
-            Text("Read up to Chapter 1234" ,
+            Text(
+                viewModel.imageDescription,
                 fontSize = 16.sp
             )
         }

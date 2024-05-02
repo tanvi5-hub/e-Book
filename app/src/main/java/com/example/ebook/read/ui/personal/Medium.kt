@@ -52,7 +52,7 @@ fun MediumBottomApp(onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth() // 使Row充满屏幕宽度
                 .padding(0.dp) // 添加一些内边距
-                .border(0.1.dp, Color.Black)
+                .border(0.1.dp, Color.Gray)
                 .clickable {
                     if (!isEditing) {
                         isEditing = true
@@ -60,24 +60,34 @@ fun MediumBottomApp(onClick: () -> Unit) {
                     }
                 }
         ) {
-            Spacer(Modifier.width(0.dp))
-
             Column {
                 Text(
-                    if (isEditing) "Editing Introduction" else "Introduction",
+                    "Introduction",
                     fontSize = 32.sp, // 明确指定字体大小
-                    color = if (isEditing) Color.Gray else Color.Black // 根据编辑状态设置颜色
+                    color = Color.Black // 根据编辑状态设置颜色
                 )
             }
         }
-
-        Spacer(Modifier.height(8.dp)) // 添加一些垂直间距
 
         // 添加可编辑的文本
         BasicTextField(
             value = editableText,
             onValueChange = { editableText = it },
-            textStyle = TextStyle(color = if (isEditing) Color.Gray else Color.Black) // 根据编辑状态设置文本颜色
+            textStyle = TextStyle(color = if (editableText.text.isNotEmpty()) Color.Black else Color.Gray), // 根据是否有输入设置文本颜色
+            modifier = Modifier
+                .height(56.dp) // 设置固定高度
+                .fillMaxWidth() // 宽度充满容器
+                .padding(16.dp), // 内边距
+            decorationBox = { innerTextField ->
+                if (editableText.text.isEmpty()) {
+                    Text(
+                        text = "Please write your introduction",
+                        style = TextStyle(color = Color.Gray),
+                        modifier = Modifier.padding(16.dp) // 与输入文本的内边距一致
+                    )
+                }
+                innerTextField() // 显示输入的文本或占位符
+            }
         )
     }
 }
@@ -94,7 +104,6 @@ fun MediumBottomwriter(onClick: () -> Unit) {
                 .clickable(onClick = onClick)
         ) {
 
-            Spacer(Modifier.width(0.dp))
 
             Column {
                 Text(

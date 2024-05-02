@@ -1,66 +1,62 @@
 package com.example.ebook.read.ui.search
 
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.ebook.R
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-
-import androidx.compose.material3.Scaffold
-
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-
-
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 
 @Composable
-fun SearchPage(navController: NavHostController) {
+fun SearchPage(navController: NavController) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White), // 设置页面背景为白色
+            .background(Color.White),
         topBar = {
-            RoundedSearchInputBox() // 搜索框组件
+            TopAppBar(
+                backgroundColor = Color.White,
+                elevation = 0.dp,
+                modifier = Modifier.height(100.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    RoundedSearchInputBox()
+                }
+            }
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            // 在这里添加页面的其他内容
-
+            // Add other content of the page here
         }
     }
 }
@@ -68,54 +64,35 @@ fun SearchPage(navController: NavHostController) {
 @Composable
 fun RoundedSearchInputBox() {
     val searchText = remember { mutableStateOf("") }
+
     OutlinedTextField(
         value = searchText.value,
         onValueChange = { searchText.value = it },
         modifier = Modifier
-            .fillMaxWidth() // 使输入框宽度与页面宽度一致
-            .padding(16.dp),
+            .fillMaxWidth()
+            .padding(end = 16.dp)
+            .height(60.dp),  // 确保高度足够
+        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),  // 文本颜色设置为黑色，字号为16sp
         leadingIcon = {
             Icon(
                 Icons.Filled.Search,
-                contentDescription = "Localized description",
-
-                tint = Color.Gray
+                contentDescription = "Search",
+                tint = Color.Gray  // 图标颜色为灰色
             )
         },
-        label = { Text("Search") },
+        label = { Text("Search", color = Color.Gray) },  // 标签文本颜色为灰色
         singleLine = true,
-        shape = RoundedCornerShape(50), // 设置较大的圆角值以获得更圆的效果
+        shape = RoundedCornerShape(50),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = {
-            // 在这里处理搜索逻辑
-            // 例如，可以使用 searchText.value 来进行查询
+            // Implement search logic
         })
     )
 }
-@Composable
+
 @Preview
-fun SearchInputBox() {
-    val context = LocalContext.current
-    val searchText = remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = searchText.value,
-        onValueChange = { searchText.value = it },
-        modifier = Modifier.padding(16.dp),
-        leadingIcon = {
-            Icon(
-                Icons.Filled.Search,
-                contentDescription = "Localized description",
-
-                tint = Color.Gray
-            )
-        },
-        singleLine = true,
-        shape = RoundedCornerShape(90), // 设置较大的圆角值以获得更圆的效果
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = {
-            // 在这里处理搜索逻辑
-            // 例如，可以使用 searchText.value 来进行查询
-        })
-    )
+@Composable
+fun SearchPagePreview() {
+    val navController = rememberNavController()
+    SearchPage(navController)
 }

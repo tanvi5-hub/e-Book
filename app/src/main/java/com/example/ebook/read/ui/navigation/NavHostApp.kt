@@ -8,10 +8,12 @@ import com.google.accompanist.navigation.animation.composable
 
 
 import androidx.navigation.compose.rememberNavController
+import com.example.ebook.read.ui.bestwriter.BestwriterScreen
 import com.example.ebook.read.ui.home.MainScreen
 import com.example.ebook.read.ui.liberary.LibraryScreen
 import com.example.ebook.read.ui.personal.PersonScreen
 import com.example.ebook.read.ui.search.SearchPage
+import com.example.ebook.read.ui.version.VersionScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -27,6 +29,8 @@ fun AppNavigation() {
         composable("personal") { PersonScreen(navController) }
         composable("library") { LibraryScreen(navController) }
         composable("search") { SearchPage(navController) }
+        composable("version"){ VersionScreen(navController)}
+        composable("Bestwriter"){ BestwriterScreen(navController)}
         // 根据需要添加更多目标
     }
 }

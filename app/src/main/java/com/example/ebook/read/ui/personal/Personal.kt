@@ -41,18 +41,13 @@ fun PersonScreen(
         ) {
             ImageButton(onClick = { /* 定义点击ImageButton后的行为 */ })
             MediumBottomApp(onClick = { /* 定义点击MediumBottomApp后的行为 */ })
-            MediumBottomwriter(onClick = { /* 定义点击MediumBottomwriter后的行为 */ })
-            MediumBottomset(onClick = { /* 定义点击MediumBottomset后的行为 */ })
+            MediumBottomwriter(onClick = { navController.navigate("Bestwriter") })
+            MediumBottomset(onClick = { navController.navigate("version") })
 
             Spacer(Modifier.height(8.dp)) // 根据需要调整间距
 
             // 在MediumBottomset下方添加一条黑线
-            Spacer(
-                Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Color.Black)
-            )
+
         }
     }
 }
