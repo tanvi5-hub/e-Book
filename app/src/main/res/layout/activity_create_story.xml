@@ -1,58 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".CreateStoryActivity">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <EditText
-        android:id="@+id/editTextStoryName"
+        android:id="@+id/storyTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:hint="Story Name"
-        android:inputType="text" />
+        android:hint="Story Title" />
 
     <EditText
-        android:id="@+id/editTextStoryDescription"
+        android:id="@+id/storyDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextStoryName"
-        android:layout_marginTop="16dp"
-        android:hint="Story Description"
-        android:inputType="textMultiLine" />
+        android:hint="Story Description" />
 
-    <Spinner
-        android:id="@+id/storyCategoryDropdown"
+    <EditText
+        android:id="@+id/storyCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextStoryDescription"
-        android:layout_marginTop="105dp" />
-
-    <LinearLayout
-        android:id="@+id/layoutPages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/storyCategoryDropdown"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"/>
+        android:hint="Story Category" />
 
     <Button
-        android:id="@+id/buttonAddPage"
-        android:layout_width="wrap_content"
+        android:id="@+id/createStoryButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/storyCategoryDropdown"
-        android:layout_marginTop="51dp"
-        android:text="Add Page" />
-
-    <Button
-        android:id="@+id/buttonSaveStory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buttonAddPage"
-        android:layout_marginTop="28dp"
-        android:text="Save Story" />
-
-</RelativeLayout>
+        android:text="Create Story" />
+</LinearLayout>

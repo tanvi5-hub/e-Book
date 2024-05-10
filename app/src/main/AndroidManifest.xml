@@ -21,7 +21,7 @@
             android:name=".CreateStoryActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPageActivity"
+            android:name=".AddPagesActivity"
             android:exported="false" />
         <activity
             android:name=".ReaderHomeActivity"
