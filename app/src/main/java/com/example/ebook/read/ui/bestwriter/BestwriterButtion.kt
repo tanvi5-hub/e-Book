@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,50 +29,43 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import com.example.ebook.read.model.AuthorDetails
 import com.example.ebook.read.model.SearchViewModel
 import com.example.ebook.read.ui.theme.ReaderTheme
 
 
 @Composable
-fun BestwriterButton(navController: NavHostController, viewModel: SearchViewModel = viewModel()) {
+
+fun BestwriterButton(navController: NavHostController, authorDetails: AuthorDetails,onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth() // 使Row充满屏幕宽度
-            .padding(0.dp) // 添加一些内边距
-            .border(0.3.dp, Color.Black)
-
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable(onClick = onClick)
     ) {
-        TextButton(onClick = { navController.navigate("search") }) {
-            Image(painter = painterResource(id = R.drawable.dog), contentDescription = "作者头像",contentScale = ContentScale.Crop, modifier = Modifier
-                .size(70.dp)
-                // 设置外部容器大小，这将是圆形的直径
-                .clip(CircleShape) )
-            Spacer(Modifier.width(20.dp))
-
-            Column {
-                androidx.compose.material3.Text(
-                    viewModel.imageName,
-                    fontSize = 32.sp // 明确指定字体大小
-                )
-
-            }
-            Spacer(Modifier.width(2000.dp))
+        authorDetails.imageUrl?.let { imageUrl ->
+            AsyncImage(
+                model = imageUrl, // 使用 Coil 或其他库加载网络图片
+                contentDescription = "Author Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(70.dp)
+                    .clip(CircleShape)
+            )
         }
+        Spacer(Modifier.width(20.dp))
 
+        Column {
+            Text(
+                text = authorDetails.name ?: "Unknown",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
-
-
-
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun BestWriterbuttonContent() {
-    ReaderTheme {
-        // 确保传递一个有效的NavHostController实例
-        val navController = rememberNavController()
-        BestwriterButton(navController)
+        Spacer(Modifier.width(2000.dp))
     }
 }
+

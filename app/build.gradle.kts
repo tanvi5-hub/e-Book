@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-database:20.3.1")
     implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("androidx.activity:activity-ktx:1.4.0")
@@ -113,7 +114,7 @@ dependencies {
     // such as input and measurement/layout
     implementation("androidx.compose.ui:ui")
 
-
+    implementation("io.coil-kt:coil-compose:2.6.0")
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")

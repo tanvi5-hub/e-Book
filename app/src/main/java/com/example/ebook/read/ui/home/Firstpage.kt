@@ -1,5 +1,6 @@
 package com.example.ebook.read.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,47 +29,60 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.clickable
+import androidx.compose.material.TextButton
+import androidx.compose.ui.text.font.FontWeight
 import com.example.ebook.read.ui.personal.ImageButton
 import com.example.ebook.read.model.SearchViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+
 // [START android_compose_layout_basics_1]
 
 @Composable
 
 
 
-fun SearchResult(onClick: () -> Unit,viewModel: SearchViewModel = viewModel()) {
+
+
+fun SearchResult(
+    navController: NavController,
+    bookName: String,
+    bookDescription: String,
+    imageUrl: String,
+    onClick: () -> Unit
+) {
+    Log.d("SearchResult", "SearchResult is called")
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .fillMaxWidth() // 使Row充满屏幕宽度
-            .padding(0.dp) // 添加一些内边距
-            .border(0.3.dp, Color.Black)
-            .clickable(onClick = onClick )
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable(onClick = onClick)
+
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.dog),
-            contentDescription = "",
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "Book Image",
             modifier = Modifier.size(80.dp)
+
         )
-        Spacer(Modifier.width(0.dp))
+        Spacer(Modifier.width(16.dp))
 
         Column {
             Text(
-                viewModel.imageName,
-                fontSize = 32.sp // 明确指定字体大小
+                bookName,
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold
             )
             Text(
-                viewModel.imageDescription,
+                bookDescription,
                 fontSize = 16.sp
             )
         }
     }
-
 }
 
-@Preview
-@Composable
-fun PreviewSearchResult() {
-    SearchResult(onClick={})
-}

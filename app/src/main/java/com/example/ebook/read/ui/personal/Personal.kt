@@ -20,14 +20,17 @@ import com.example.ebook.read.ui.home.HomeBottomAppBarExample
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.ebook.read.model.UserViewModel
 
 
 @Composable
 fun PersonScreen(
     navController: NavHostController, // 正确的类型声明
-    modifier: Modifier = Modifier // 正确的Modifier声明
+    modifier: Modifier = Modifier,
+    viewModel: UserViewModel = viewModel()
 ) {
     Scaffold(
         bottomBar = {
@@ -39,7 +42,7 @@ fun PersonScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            ImageButton(onClick = { /* 定义点击ImageButton后的行为 */ })
+            ImageButton()
             MediumBottomApp(onClick = { /* 定义点击MediumBottomApp后的行为 */ })
             MediumBottomwriter(onClick = { navController.navigate("Bestwriter") })
             MediumBottomset(onClick = { navController.navigate("version") })

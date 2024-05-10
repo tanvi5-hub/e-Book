@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import com.example.ebook.read.ui.theme.ReaderTheme.colors
 
 
 private val LightColorPalette = ReaderColors(
@@ -80,6 +81,7 @@ fun ReaderTheme(
             typography = Typography,
             shapes = Shapes,
             content = content
+
         )
     }
 }
@@ -296,6 +298,7 @@ fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable ()
     MaterialTheme(
 
         shapes = Shapes,
-        content = content
+        content = content,
+
     )
 }

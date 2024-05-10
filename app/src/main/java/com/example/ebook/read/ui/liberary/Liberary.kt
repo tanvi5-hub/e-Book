@@ -1,5 +1,6 @@
 package com.example.ebook.read.ui.liberary
 
+import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,26 +17,37 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.ebook.read.model.StoriesViewModel
 import com.example.ebook.read.ui.home.HomeBottomAppBarExample
 import com.example.ebook.read.ui.home.SearchResult
 import com.example.ebook.read.ui.search.SearchButton
 import com.example.ebook.read.ui.theme.ReaderTheme
-
+import com.example.ebook.read.model.UserViewModel
 import com.google.accompanist.flowlayout.FlowRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LibraryScreen(navController: NavHostController) {
+fun LibraryScreen(navController: NavHostController, userViewModel: UserViewModel = viewModel(), storiesViewModel: StoriesViewModel = viewModel()) {
+
+    val bookDetails by storiesViewModel.filteredStories.collectAsState()
+
+
+
     Scaffold(
         topBar = {
             Column {
                 SearchButton(navController)
-                FilterButton(navController)
+                FilterButton(navController,storiesViewModel)
             }
              // 确保你有一个SearchButton组件的定义
         },
@@ -43,15 +55,23 @@ fun LibraryScreen(navController: NavHostController) {
             HomeBottomAppBarExample(navController) // 使用外部传入的navController
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .verticalScroll(rememberScrollState())) {
-            SearchResult(onClick = {
-                // 定义点击搜索结果后的行为，例如导航到详细页面
-                // 例如：navController.navigate("detail_screen")
-            })
-            // SearchResult组件需要定义一个onClick参数的行为
-            Spacer(Modifier.height(8.dp)) // 根据需要调整间距
+        Column(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
+            if (bookDetails.isEmpty()) {
+                Text("Loading books...")
+            } else {
+                Log.d("MainScreen", "Displaying ${bookDetails.size} books")
+                bookDetails.forEach { book ->
+                    Log.d("MainScreen", "Rendering book: ${book.bookid}")
+                    SearchResult(
+                        navController = navController,
+                        bookName = book.name,
+                        bookDescription = book.description,
+                        imageUrl = book.imageUrl,
+                        onClick = { navController.navigate("bookDetails/${book.bookid}") }
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
+            }
         }
     }
 }

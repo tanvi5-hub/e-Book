@@ -1,5 +1,10 @@
 package com.example.ebook.read.ui.personal
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -175,49 +180,108 @@ import com.example.ebook.read.ui.home.SearchResult
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.layout.ContentScale
- // 注意替换为你的应用包名
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import com.example.ebook.read.model.UserViewModel
+import com.example.ebook.read.ui.writer.AuthorWorks
+import com.google.firebase.storage.FirebaseStorage
+
+
+// 注意替换为你的应用包名
 
 @Composable
-fun ImageButton(onClick: () -> Unit) {
-    BottomAppBar (
-        modifier = Modifier.height(200.dp)
-                )
-     {
-         Column(
-             horizontalAlignment = Alignment.CenterHorizontally,
-         ){
-            Image(
-
-                painter = painterResource(id = R.drawable.dog), // 替换为你的图片资源ID
-                contentDescription = "Button Image",
-                contentScale = ContentScale.Crop, // 确保图片从中心裁剪以适应尺寸
-                modifier = Modifier
-                    .size(100.dp)
-                    // 设置外部容器大小，这将是圆形的直径
-                    .clip(CircleShape) // 将图片剪切为圆形
-                    .clickable(onClick = onClick)
-            )
+fun ImageButton(viewModel: UserViewModel = viewModel()) {
+    val userDetails by viewModel.getreaderDetails().observeAsState()
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            viewModel.uploadImageToFirebaseStorage(it, userDetails?.userId ?: "")
         }
-        TextButton(
+    }
 
-            onClick = { /* do something */ }
-
-
+    BottomAppBar(modifier = Modifier.height(250.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Please enter the name", color = Color.Black)
+            userDetails?.let { user ->
+                val imageUrl = user.imageUrl
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = "作者头像",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clip(CircleShape)
+                        .clickable { launcher.launch("image/*") } // 添加点击事件
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                userDetails?.let { user ->
+                    val name = user.name
+                    name?.let { Text(text = it) }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+            }
         }
     }
 }
 
-@Preview
+
 @Composable
-fun PreviewImageButton() {
-    ImageButton(onClick = { /* 在这里处理点击事件 */ })
+fun ImagePicker(onImagePicked: (Uri) -> Unit) {
+    val context = LocalContext.current
+    val pickImageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                onImagePicked(uri)
+            }
+        }
+    }
+
+    val pickImage = remember {
+        {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            pickImageLauncher.launch(intent)
+        }
+    }
+
+    // 暴露这个方法给外部调用
+    pickImage()
 }
+
+fun uploadImage(imageUri: Uri, onSuccess: (String) -> Unit, context: Context) {
+    val storageRef = FirebaseStorage.getInstance().reference
+    val fileRef = storageRef.child("images/${imageUri.lastPathSegment}")
+    val uploadTask = fileRef.putFile(imageUri)
+
+    uploadTask.addOnSuccessListener {
+        fileRef.downloadUrl.addOnSuccessListener { uri ->
+            onSuccess(uri.toString())
+        }
+    }.addOnFailureListener {
+        // Handle unsuccessful uploads
+    }
+}
+
+

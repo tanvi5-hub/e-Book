@@ -1,7 +1,10 @@
 package com.example.ebook.read.ui.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,23 +13,40 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavController
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.ebook.read.model.BookViewModel
+
 @Composable
-fun SearchPage(navController: NavController) {
+fun CustomListItem(bookName: String, onClick: () -> Unit) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onClick)
+        .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = bookName, style = MaterialTheme.typography.subtitle1)
+    }
+}
+
+@Composable
+fun SearchPage(navController: NavController, viewModel: BookViewModel = viewModel()) {
+    val books by viewModel.books.collectAsState(initial = emptyList())
+    val authors by viewModel.authors.collectAsState(initial = emptyList())
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -50,45 +70,62 @@ fun SearchPage(navController: NavController) {
                         )
                     }
                     Spacer(Modifier.width(8.dp))
-                    RoundedSearchInputBox()
+                    RoundedSearchInputBox(viewModel)  // Pass viewModel here
                 }
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            // Add other content of the page here
+        Column(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+            Text("Books", style = MaterialTheme.typography.h6, modifier = Modifier.padding(8.dp))
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(books) { book ->
+                    CustomListItem(bookName = book.name, onClick = {
+                        navController.navigate("bookDetails/${book.bookId}")
+                    })
+                    Divider()
+                }
+            }
+            Text("Authors", style = MaterialTheme.typography.h6, modifier = Modifier.padding(8.dp))
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(authors) { author ->
+                    CustomListItem(bookName = author.name, onClick = {
+                        navController.navigate("writerDetails/${author.userId}")
+                    })
+                    Divider()
+                }
+            }
         }
     }
 }
 
-@Composable
-fun RoundedSearchInputBox() {
-    val searchText = remember { mutableStateOf("") }
 
-    OutlinedTextField(
-        value = searchText.value,
-        onValueChange = { searchText.value = it },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 16.dp)
-            .height(60.dp),  // 确保高度足够
-        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),  // 文本颜色设置为黑色，字号为16sp
-        leadingIcon = {
-            Icon(
-                Icons.Filled.Search,
-                contentDescription = "Search",
-                tint = Color.Gray  // 图标颜色为灰色
-            )
-        },
-        label = { Text("Search", color = Color.Gray) },  // 标签文本颜色为灰色
-        singleLine = true,
-        shape = RoundedCornerShape(50),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = {
-            // Implement search logic
-        })
-    )
-}
+    @Composable
+
+    fun RoundedSearchInputBox(viewModel: BookViewModel) {
+        val searchText = remember { mutableStateOf("") }
+
+        OutlinedTextField(
+            value = searchText.value,
+            onValueChange = { searchText.value = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 16.dp),
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Search,
+                    contentDescription = "Search",
+                    tint = Color.Gray
+                )
+            },
+            label = { Text("Search") },
+            singleLine = true,
+            shape = RoundedCornerShape(50),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = {
+                viewModel.searchBooksAndAuthors(searchText.value)
+            })
+        )
+    }
 
 @Preview
 @Composable

@@ -1,6 +1,7 @@
 package com.example.ebook.read.ui.book
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,21 +21,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.ebook.R
+import com.example.ebook.read.model.Book
+import com.example.ebook.read.model.StoriesViewModel
+
+import com.example.ebook.read.model.UserViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NovelDetailsPage() {
+
+fun NovelDetailsPage(bookid: String, navController: NavHostController, viewModel: UserViewModel= viewModel(),storiesViewModel: StoriesViewModel = viewModel()) {
+    val bookDetails by storiesViewModel.getBookDetails(bookid).observeAsState()
+    val isFollowing by viewModel.isFollowing.observeAsState(false)
+    LaunchedEffect(bookid) {
+        viewModel.watchBooklist(bookid)
+
+    }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Bookname") },
+                title = { Text(bookDetails?.name ?: "Loading...") },
                 navigationIcon = {
-                    IconButton(onClick = { /* handle back navigation */ }) {
-                        androidx.compose.material3.Icon(
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
                             Icons.Filled.KeyboardReturn,
-                            contentDescription = "Localized description",
-                            tint = Color.Black
+                            contentDescription = "Return",
+                            tint = Color.White
                         )
                     }
                 }
@@ -39,36 +57,43 @@ fun NovelDetailsPage() {
         },
         bottomBar = {
             BottomAppBar(backgroundColor = Color.LightGray) {
-                Button(modifier = Modifier.weight(1f), onClick = { /* 加入书架逻辑 */ }) {
-                    Text("Add to bookstore")
+                Button(modifier = Modifier.weight(1f),onClick = {
+                    viewModel.toggleBooklist(bookid, isFollowing)
+                }) {
+                    Text(if (isFollowing) "In bookstore" else "Add to bookstore")
                 }
                 Button(modifier = Modifier.weight(1f), onClick = { /* 立刻阅读逻辑 */ }) {
                     Text("Read it")
                 }
+
+
             }
         }
     ) {
-        NovelContent()
+        NovelContent(book = bookDetails)
     }
 }
 
 @Composable
-fun NovelContent() {
+fun NovelContent(book: Book?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = R.drawable.dog), contentDescription = "书封面")
+        AsyncImage(
+            model = book?.imageUrl ?: "Loading...",
+            contentDescription = "Book Image",
+            modifier = Modifier.size(360.dp)
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Book Name", style = MaterialTheme.typography.h5)
-        Text("writer", style = MaterialTheme.typography.subtitle1)
+        Text(book?.name ?: "Loading...", style = MaterialTheme.typography.h5)
+        Text(book?.authorName ?: "Loading...", style = MaterialTheme.typography.h5)
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Novel introduction", textAlign = TextAlign.Justify)
+        Text(book?.description ?: "Loading...", textAlign = TextAlign.Justify)
         Spacer(modifier = Modifier.height(16.dp))
-        // 新增的作品种类显示框
-        GenreTag(genre = "Fantasy") // 假定作品种类为"Fantasy"
+        GenreTag(genre = book?.category ?: "Loading...")
     }
 }
 
@@ -111,9 +136,4 @@ fun GenreTag(genre: String) {
             }
         }
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun PreviewNovelDetailsPage() {
-    NovelDetailsPage()
 }

@@ -2,6 +2,7 @@ package com.example.ebook.read.ui.bestwriter
 
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +43,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.layout.height
-
+import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.*
 
@@ -50,17 +51,23 @@ import com.example.ebook.read.ui.search.SearchButton
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.ebook.read.ui.home.HomeBottomAppBarExample
 import com.example.ebook.read.ui.home.SearchResult
 import com.example.ebook.read.ui.navigation.AppNavigation
 import com.example.ebook.read.ui.personal.PersonScreen
-
+import androidx.compose.foundation.layout.padding
+import com.example.ebook.read.model.UserViewModel
 
 
 @Composable
-fun BestwriterScreen(navController: NavHostController) {
+fun BestwriterScreen(navController: NavHostController, viewModel: UserViewModel = viewModel()) {
+    val authorDetailsList by viewModel.getBestAuthorDetails().observeAsState(initial = emptyList())
+    Log.e("UserViewModel", "Failed to read value", )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,12 +83,16 @@ fun BestwriterScreen(navController: NavHostController) {
             )
         }
     ) { innerPadding ->
-        Column(modifier = androidx.compose.ui.Modifier
-            .padding(innerPadding)
+        Column(modifier = androidx.compose.ui.Modifier.padding(innerPadding)
             .verticalScroll(rememberScrollState())) {
-            BestwriterButton(navController)
-            // SearchResult组件需要定义一个onClick参数的行为
-            Spacer(androidx.compose.ui.Modifier.height(8.dp)) // 根据需要调整间距
+            authorDetailsList.forEach { authorDetails ->
+                Log.e("UserViewModel", "Failed to read value${authorDetails.authorId}", )
+
+                BestwriterButton(navController, authorDetails,onClick = { navController.navigate("writerDetails/${authorDetails.authorId}") })
+
+
+            }
+
         }
     }
 }

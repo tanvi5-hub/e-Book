@@ -18,7 +18,9 @@ import androidx.compose.material.icons.Icons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material3.BottomAppBar
 
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,11 +37,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.ebook.read.model.StoriesViewModel
 import com.example.ebook.read.ui.theme.ReaderTheme
 import com.example.ebook.read.ui.liberary.FilterButton
-
+import com.google.accompanist.flowlayout.FlowRow
 @Composable
-fun FilterButton(navController: NavHostController) {
+fun FilterButton(navController: NavHostController, storiesViewModel: StoriesViewModel) {
     var showMenu by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxWidth()) {
@@ -48,14 +51,13 @@ fun FilterButton(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                // 保持使用 OutlinedButton
                 OutlinedButton(
                     onClick = { showMenu = !showMenu },
-                    modifier = Modifier.width(150.dp)  // 指定宽度
+                    modifier = Modifier.width(150.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.FilterAlt,
-                        contentDescription = "Localized description",
+                        contentDescription = "Filter books",
                         tint = Color.Black
                     )
                     Text(text = "Filter books", color = Color.Black)
@@ -63,7 +65,6 @@ fun FilterButton(navController: NavHostController) {
             }
         }
 
-        // 当菜单展开时显示
         if (showMenu) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
@@ -74,33 +75,35 @@ fun FilterButton(navController: NavHostController) {
                     onDismissRequest = { showMenu = false },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    DropdownContent(navController)
+                    DropdownContent(navController, storiesViewModel)
                 }
             }
         }
     }
 }
 
+
 @Composable
-fun DropdownContent(navController: NavHostController) {
-    com.google.accompanist.flowlayout.FlowRow(
-        mainAxisSpacing = 16.dp,  // 主轴（水平）间距
-        crossAxisSpacing = 8.dp,  // 交叉轴（垂直）间距
+fun DropdownContent(navController: NavHostController, storiesViewModel: StoriesViewModel) {
+    FlowRow(
+        mainAxisSpacing = 16.dp,
+        crossAxisSpacing = 8.dp,
         modifier = Modifier.fillMaxWidth().padding(8.dp)
     ) {
-        DropdownButton("Filter Option 1", "filter_option_1", navController)
-        DropdownButton("Filter Option 2", "library", navController)
-        DropdownButton("Filter Option 3", "filter_option_3", navController)
-        // 可以继续添加更多按钮
+        DropdownButton("fantasy", "fantasy",  storiesViewModel)
+
+        DropdownButton("Filter Option 2", "filter_option_2", storiesViewModel)
+        DropdownButton("Filter Option 3", "filter_option_3",  storiesViewModel)
+        DropdownButton("all", "all",  storiesViewModel)
     }
 }
 
 @Composable
-fun DropdownButton(text: String, route: String, navController: NavHostController) {
+fun DropdownButton(text: String, filterValue: String,  storiesViewModel: StoriesViewModel) {
     Button(
         onClick = {
-            navController.navigate(route)
-            var showMenu = false
+            storiesViewModel.setFilter(filterValue)
+            var showMenu = false  // Ensure this logic runs correctly
         },
         modifier = Modifier.padding(horizontal = 0.dp)
     ) {
@@ -109,9 +112,3 @@ fun DropdownButton(text: String, route: String, navController: NavHostController
 }
 
 
-@Preview
-@Composable
-fun FilterPreview() {
-    val navController = rememberNavController()
-    FilterButton(navController)
-}

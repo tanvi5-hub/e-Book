@@ -1,5 +1,6 @@
 package com.example.ebook.read.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -15,30 +16,62 @@ import androidx.compose.foundation.layout.*
 import com.example.ebook.read.ui.search.SearchButton
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.ebook.read.ui.navigation.AppNavigation
 import com.example.ebook.read.ui.personal.PersonScreen
 import com.example.ebook.read.ui.theme.ReaderTheme
-
-
+import com.example.ebook.read.model.UserViewModel
+import com.example.ebook.read.model.StoriesViewModel
 @Composable
-fun MainScreen(navController: NavHostController) {
+
+
+fun MainScreen(navController: NavHostController, userViewModel: UserViewModel = viewModel(), storiesViewModel: StoriesViewModel = viewModel()) {
+    val bookIds by userViewModel.getBooklist().observeAsState(listOf())
+
+
+
+    LaunchedEffect(bookIds) {
+        if (bookIds.isNotEmpty()) {
+            Log.d("MainScreen", " book IDs available")
+            Log.d("BookListScreen", "Current bookIds: $bookIds")
+        } else {
+            Log.d("MainScreen", "No book IDs available")
+        }
+    }
+
     Scaffold(
         topBar = {
-            SearchButton(navController) // 确保你有一个SearchButton组件的定义
+            SearchButton(navController)
         },
         bottomBar = {
-            HomeBottomAppBarExample(navController) // 使用外部传入的navController
+            HomeBottomAppBarExample(navController)
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding).verticalScroll(rememberScrollState())) {
-            SearchResult(onClick = {
-                // 定义点击搜索结果后的行为，例如导航到详细页面
-                // 例如：navController.navigate("detail_screen")
-            })
-            // SearchResult组件需要定义一个onClick参数的行为
-            Spacer(Modifier.height(8.dp)) // 根据需要调整间距
+            if (bookIds.isEmpty()) {
+                Text("Loading books...")
+            } else {
+                Log.d("MainScreen", "Displaying ${bookIds.size} books")
+                bookIds.forEach { book ->
+                    Log.d("MainScreen", "Rendering book: ${book.bookid}")
+
+                    SearchResult(
+                        navController = navController,
+                        bookName = book.name,
+                        bookDescription = book.description,
+                        imageUrl = book.imageUrl,
+                        onClick = { navController.navigate("search") }
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
+            }
         }
     }
 }
