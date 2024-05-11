@@ -22,7 +22,6 @@ class AuthorHomeActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var storiesRef: DatabaseReference
     private lateinit var currentUser: FirebaseAuth
-
     private lateinit var storiesLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +47,7 @@ class AuthorHomeActivity : AppCompatActivity() {
 
                 // Iterate through each story and display it
                 for (storySnapshot in dataSnapshot.children) {
+                    val storyId = storySnapshot.key
                     val name = storySnapshot.child("name").getValue(String::class.java) ?: ""
                     val category = storySnapshot.child("category").getValue(String::class.java) ?: ""
                     val description = storySnapshot.child("description").getValue(String::class.java) ?: ""
@@ -79,6 +79,12 @@ class AuthorHomeActivity : AppCompatActivity() {
                     val storyTextView = TextView(this@AuthorHomeActivity)
                     storyTextView.text = "Name: $name\nCategory: $category\nDescription: $description\n"
                     storyLayout.addView(storyTextView)
+
+                    storyLayout.setOnClickListener {
+                        val intent = Intent(this@AuthorHomeActivity, AddPagesActivity::class.java)
+                        intent.putExtra("STORY_ID", storyId)
+                        startActivity(intent)
+                    }
 
                     storiesLayout.addView(storyLayout)
                 }
