@@ -5,6 +5,25 @@ import android.os.Bundle
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -25,7 +44,6 @@ class AddPagesActivity : AppCompatActivity() {
 
         storyPagesLabel = findViewById(R.id.storyPagesLabel)
         pagesListView = findViewById(R.id.pagesListView)
-
         pagesAdapter = NewPageAdapter(this, pages)
         pagesListView.adapter = pagesAdapter
 
@@ -39,6 +57,15 @@ class AddPagesActivity : AppCompatActivity() {
 
         // Load and display pages for this story
         loadPages()
+
+        // Set up the ComposeView for the back button and app name
+        findViewById<ComposeView>(R.id.composeView).setContent {
+            MaterialTheme {
+                Surface(color = Color.Transparent) {
+                    BackButtonWithAppName()
+                }
+            }
+        }
     }
 
     private fun loadPages() {
@@ -59,5 +86,37 @@ class AddPagesActivity : AppCompatActivity() {
                 // Handle error
             }
         })
+    }
+
+    @Composable
+    fun BackButtonWithAppName() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = {
+                val intent = Intent(this@AddPagesActivity, AuthorHomeActivity::class.java)
+                startActivity(intent)
+                finish()
+            }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            }
+            Text(
+                text = "Back Home",
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun BackButtonWithAppNamePreview() {
+        MaterialTheme {
+            BackButtonWithAppName()
+        }
     }
 }

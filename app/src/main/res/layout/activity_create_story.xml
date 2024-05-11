@@ -16,15 +16,36 @@
         android:layout_height="wrap_content"
         android:hint="Story Description" />
 
-    <EditText
-        android:id="@+id/storyCategory"
+    <Spinner
+        android:id="@+id/storyCategoryDropdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Story Category" />
+
+    <ImageView
+        android:id="@+id/coverImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/selectCoverButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Cover Image"
+        android:layout_marginTop="8dp" />
 
     <Button
         android:id="@+id/createStoryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Story" />
+        android:text="Create Story"
+        android:layout_marginTop="16dp" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>

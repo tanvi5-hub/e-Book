@@ -197,9 +197,7 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-placeholder-material:$accompanist_version")
     implementation ("com.google.accompanist:accompanist-swiperefresh:$accompanist_version")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
-
-
-
-
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 }

@@ -1,10 +1,14 @@
 package com.example.ebook
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup.LayoutParams
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -20,13 +24,9 @@ class AuthorHomeActivity : AppCompatActivity() {
     private lateinit var currentUser: FirebaseAuth
 
     private lateinit var storiesLayout: LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_author_home)
-
-
-
-
         setContentView(R.layout.activity_author_home)
 
         database = FirebaseDatabase.getInstance()
@@ -51,17 +51,42 @@ class AuthorHomeActivity : AppCompatActivity() {
                     val name = storySnapshot.child("name").getValue(String::class.java) ?: ""
                     val category = storySnapshot.child("category").getValue(String::class.java) ?: ""
                     val description = storySnapshot.child("description").getValue(String::class.java) ?: ""
+                    val coverUrl = storySnapshot.child("coverUrl").getValue(String::class.java) ?: ""
+
+                    // Create a layout for each story
+                    val storyLayout = LinearLayout(this@AuthorHomeActivity)
+                    storyLayout.orientation = LinearLayout.HORIZONTAL
+                    storyLayout.layoutParams = LinearLayout.LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(0, 0, 0, 32)
+                    }
+
+                    // Create an ImageView to display the cover photo
+                    val coverImageView = ImageView(this@AuthorHomeActivity)
+                    val coverLayoutParams = LinearLayout.LayoutParams(
+                        200,
+                        300
+                    ).apply {
+                        setMargins(0, 0, 16, 0)
+                    }
+                    coverImageView.layoutParams = coverLayoutParams
+                    Glide.with(this@AuthorHomeActivity).load(coverUrl).into(coverImageView)
+                    storyLayout.addView(coverImageView)
 
                     // Create a TextView to display the story details
                     val storyTextView = TextView(this@AuthorHomeActivity)
                     storyTextView.text = "Name: $name\nCategory: $category\nDescription: $description\n"
-                    storiesLayout.addView(storyTextView)
+                    storyLayout.addView(storyTextView)
+
+                    storiesLayout.addView(storyLayout)
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Handle database error
-                TODO("Handle database error")
+                // TODO: Handle database error
             }
         })
 
@@ -72,5 +97,23 @@ class AuthorHomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Navigation button listeners
+        val navHome = findViewById<Button>(R.id.nav_home)
+        val navStats = findViewById<Button>(R.id.nav_stats)
+        val navProfile = findViewById<Button>(R.id.nav_profile)
+
+        navHome.setOnClickListener {
+            // Already in HomeActivity
+        }
+
+        navStats.setOnClickListener {
+            val intent = Intent(this, StatsActivity::class.java)
+            startActivity(intent)
+        }
+
+        navProfile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

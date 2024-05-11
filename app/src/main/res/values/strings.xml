@@ -4,4 +4,7 @@
     <string name="submit">Submit</string>
     <string name="select_category">Select Category</string>
     <string name="choose_number_of_choices">Choose No. of Choices</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="bio">Bio</string>
+    <string name="save">Save</string>
 </resources>
